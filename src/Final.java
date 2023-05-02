@@ -27,7 +27,7 @@ public class Final{
         frame.setContentPane(new Final().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setBackground(Color.BLACK);
+        frame.setBackground(Color.BLUE);
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
         frame.setSize(540,390);
