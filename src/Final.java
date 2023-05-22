@@ -1,11 +1,12 @@
+import javax.sound.midi.*;
 import javax.sound.sampled.*;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.nio.charset.*;
 import java.util.ArrayList;
 
 public class Final extends JFrame implements ActionListener {
@@ -14,11 +15,12 @@ public class Final extends JFrame implements ActionListener {
     private static Image backgroundImage;
     private boolean sliderSong;
     Long currentFrame;
-    int count;
+    private int duration;
     Clip clip;
     private JTextArea andySMusicPlayerTextArea;
     private AudioInputStream audioInputStream;
     private JPasswordField passwordField1;
+    private DataLine own;
     private JButton listenButton;
     private JButton recommendButton;
     private JButton playArtistButton;
@@ -29,12 +31,13 @@ public class Final extends JFrame implements ActionListener {
     JPanel panel=new JPanel();
     JSplitPane splitPane=new JSplitPane();
     File songs;
+    int count;
+
     String timeStamp;
 
 
     public Final() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-
-        songs=new File("src/The Weeknd - Blinding Lights (Official Audio).wav");
+        songs=new File("src/03 novacane.wav");
         ImageIcon icon=new ImageIcon();
         audioInputStream= AudioSystem.getAudioInputStream(songs.getAbsoluteFile());
         clip=AudioSystem.getClip();
@@ -56,6 +59,13 @@ public class Final extends JFrame implements ActionListener {
                         clip.open(audioInputStream);
                         count++;
                         clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+                        slider1.addChangeListener(new ChangeListener() {
+                            @Override
+                            public void stateChanged(ChangeEvent e) {
+
+                            }
+                        });
                     }else{
                         clip.open(audioInputStream);
                         slider1.setValue((int)clip.getMicrosecondPosition());
@@ -80,6 +90,13 @@ public class Final extends JFrame implements ActionListener {
                 clip.close();
             }
         });
+        listenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pause();
+            }
+        });
+
 
     }
 
@@ -95,24 +112,42 @@ public class Final extends JFrame implements ActionListener {
         frame.setSize(840,690);
         frame.setLocationRelativeTo(null);
 
+
     }
     public void pause(){
-        if(clip.isRunning()){
+        if(clip.isRunning()&&timeStamp.equals("playing")){
             clip.stop();
             clip.close();
+            this.currentFrame=this.clip.getMicrosecondPosition();
+            timeStamp="paused";
+        }
+    }
+    public void resume() throws LineUnavailableException, IOException {
+        if(timeStamp.equals("paused")){
+            slider1.setValue(Math.toIntExact((currentFrame)));
+            clip.setMicrosecondPosition(currentFrame);
+
+            clip.open(audioInputStream);
+
+
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
     public double geDesiredFrame(){
         int frame= slider1.getValue();
         double only= ((double)audioInputStream.getFormat().getFrameRate());
         return only;
     }
-    public String songName(String songName){
-        return songName.substring(0,songName.indexOf("("));
+    public String songName(String songName) {
+
+        if (songName.contains("(")) {
+            return songName.substring(0, songName.indexOf("("));
+        }
+        return songName.substring(0,songName.indexOf("."));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }
