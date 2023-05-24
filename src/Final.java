@@ -1,11 +1,12 @@
 import javax.sound.sampled.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.plaf.basic.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Final extends JFrame implements ActionListener {
     private JPanel panel1;
@@ -29,6 +30,7 @@ public class Final extends JFrame implements ActionListener {
     private JButton pauseButton;
     private JButton forwardButton;
     private JButton restart;
+    private ArrayList<File> songList;
     DefaultListModel<String> model=new DefaultListModel<>();
     JLabel label3=new JLabel();
     JPanel panel=new JPanel();
@@ -91,11 +93,13 @@ public class Final extends JFrame implements ActionListener {
         clip.open(audioInputStream);
     }
     public void resume() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
-        if (timeStamp.equals("paused")) {
+        if (timeStamp!=null&&timeStamp.equals("paused")) {
             clip.close();
             restartAudioStream(songs);
             clip.setMicrosecondPosition(clipTimePosition);
             clip.start();
+        }else{
+            JOptionPane.showMessageDialog(null,"HAVEN'T PLAYED SONG");
         }
     }
 
@@ -147,13 +151,24 @@ public class Final extends JFrame implements ActionListener {
             pause();
         }
     }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
     public Image setImageButtons(ImageIcon icons){
         ImageIcon temp=icons;
         Image image=temp.getImage();
         return image.getScaledInstance(45,45, Image.SCALE_FAST);
+    }
+    public void initializeSongList(){
+        String zipName="src/frank_ocean_nostalgiaultra.zip";
+        try(FileInputStream fis=new FileInputStream(zipName)) {
+            BufferedInputStream bis=new BufferedInputStream(fis);
+            ZipInputStream zis=new ZipInputStream(bis);
+            ZipEntry ze=null;
+            while ((ze=zis.getNextEntry())!=null){
+                songList.add(ze.getName());
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
