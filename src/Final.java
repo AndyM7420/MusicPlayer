@@ -26,9 +26,9 @@ public class Final extends JFrame implements ActionListener {
     private JList<String> list1;
     private JSlider slider1;
     private JPanel shit;
-    private JButton pause;
-    private JButton resume;
-    private JButton play;
+    private JButton pauseButton;
+    private JButton forwardButton;
+    private JButton restart;
     DefaultListModel<String> model=new DefaultListModel<>();
     JLabel label3=new JLabel();
     JPanel panel=new JPanel();
@@ -38,75 +38,30 @@ public class Final extends JFrame implements ActionListener {
 
 
     public Final() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        play.setSize(2,3);
-        JOptionPane.showMessageDialog(null,"Press play to start song");
+        restart.setSize(2,3);
+        JOptionPane.showMessageDialog(null,"Press listen to start song");
         songs=new File("src/03 novacane.wav");
-        ImageIcon icon=new ImageIcon("src/117815-200-removebg-preview.png");
-        Image image=icon.getImage();
-        Image newimg=image.getScaledInstance(120,120, Image.SCALE_FAST);
         audioInputStream= AudioSystem.getAudioInputStream(songs.getAbsoluteFile());
-        play.setIcon((newimg);
+        ImageIcon restarts = new ImageIcon("src/2143261-200.png");
+        ImageIcon pause=new ImageIcon("src/61180.png");
+        ImageIcon forward=new ImageIcon("src/images.png");
+        restarts.setImage(setImageButtons(restarts));
+        pause.setImage(setImageButtons(pause));
+        forward.setImage(setImageButtons(forward));
+        pauseButton.setIcon(pause);
+        forwardButton.setIcon(forward);
+        restart.setIcon((restarts));
         clip=AudioSystem.getClip();
+        clip.open(audioInputStream);
         list1.setModel(model);
         list1.setOpaque(true);
-        if(!sliderSong){
+        if(!sliderSong) {
             slider1.setVisible(false);
         }
-
-        playArtistButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timeStamp="playing";
-                model.addElement(songName(songs.getName()));
-                try {
-
-
-
-                        clip.open(audioInputStream);
-                        clip.start();
-                        count++;
-                        clip.loop(Clip.LOOP_CONTINUOUSLY);
-                } catch (LineUnavailableException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                slider1.setVisible(true);
-
-
-            }
-        });
-        recommendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    resume();
-                } catch (LineUnavailableException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        listenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pause();
-            }
-        });
-        play.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    resume();
-                } catch (LineUnavailableException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-
+        playArtistButton.addActionListener(this);
+        restart.addActionListener(this);
+        recommendButton.addActionListener(this);
+        listenButton.addActionListener(this);
 
     }
 
@@ -121,23 +76,27 @@ public class Final extends JFrame implements ActionListener {
         frame.setVisible(true);
         frame.setSize(840,690);
         frame.setLocationRelativeTo(null);
-
-
     }
     public void pause(){
         if(clip.isRunning()&&timeStamp.equals("playing")){
             clipTimePosition=clip.getMicrosecondPosition();
             clip.stop();
-            clip.close();
             timeStamp="paused";
         }
     }
-    public void resume() throws LineUnavailableException, IOException {
-
+    public void restartAudioStream(File chosenSong) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        songs=chosenSong;
+        audioInputStream= AudioSystem.getAudioInputStream(songs.getAbsoluteFile());
+        clip=AudioSystem.getClip();
+        clip.open(audioInputStream);
+    }
+    public void resume() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+        if (timeStamp.equals("paused")) {
+            clip.close();
+            restartAudioStream(songs);
             clip.setMicrosecondPosition(clipTimePosition);
             clip.start();
-            clip.open(audioInputStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
     }
 
     public double geDesiredFrame(){
@@ -155,10 +114,46 @@ public class Final extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getSource()==playArtistButton){
+            timeStamp="playing";
+            model.addElement(songName(songs.getName()));
+            clip.start();
+            count++;
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            slider1.setVisible(true);
+        }else if(e.getSource()==restart){
+            try {
+                resume();
+            } catch (LineUnavailableException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (UnsupportedAudioFileException ex) {
+                throw new RuntimeException(ex);
+            }
+        }else if(e.getSource()==recommendButton){
+            try {
+                resume();
+            } catch (LineUnavailableException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (UnsupportedAudioFileException ex) {
+                throw new RuntimeException(ex);
+            }
+        }else if(e.getSource()==listenButton){
+            pause();
+        }else if(e.getSource()==pauseButton){
+            pause();
+        }
     }
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+    public Image setImageButtons(ImageIcon icons){
+        ImageIcon temp=icons;
+        Image image=temp.getImage();
+        return image.getScaledInstance(45,45, Image.SCALE_FAST);
     }
 }

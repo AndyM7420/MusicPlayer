@@ -57,19 +57,6 @@
                   <text value="Recommend "/>
                 </properties>
               </component>
-              <component id="3f701" class="javax.swing.JButton" binding="playArtistButton" default-binding="true">
-                <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Play Artist"/>
-                </properties>
-              </component>
-              <vspacer id="dd2c5">
-                <constraints>
-                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </vspacer>
               <hspacer id="b9a8a">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -127,7 +114,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="b3cd6" class="javax.swing.JButton" binding="pause">
+                      <component id="b3cd6" class="javax.swing.JButton" binding="pauseButton">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -145,7 +132,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="dc117" class="javax.swing.JButton" binding="play">
+                      <component id="dc117" class="javax.swing.JButton" binding="restart">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -168,18 +155,31 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="3dab3" class="javax.swing.JButton" binding="resume">
+                      <component id="3dab3" class="javax.swing.JButton" binding="forwardButton">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
-                          <text value="Button"/>
+                          <text value=""/>
                         </properties>
                       </component>
                     </children>
                   </grid>
                 </children>
               </grid>
+              <vspacer id="5d4fb">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <component id="3f701" class="javax.swing.JButton" binding="playArtistButton" default-binding="true">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Play Artist"/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>
