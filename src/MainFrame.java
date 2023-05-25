@@ -9,8 +9,6 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton historyButton;
     public MainFrame(){
         this.setVisible(true);
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
