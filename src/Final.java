@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -32,7 +33,7 @@ public class Final extends JFrame implements ActionListener {
     private JButton forwardButton;
     private JButton restart;
     private JLabel Title;
-    private ArrayList<String> songList;
+    public static ArrayList<String> songList=new ArrayList<String>();
     DefaultListModel<String> model = new DefaultListModel<>();
     JLabel label3 = new JLabel();
     JPanel panel = new JPanel();
@@ -66,6 +67,13 @@ public class Final extends JFrame implements ActionListener {
         restart.addActionListener(this);
         recommendButton.addActionListener(this);
         listenButton.addActionListener(this);
+        Song nose=new Song(new File("src/frank").listFiles());
+        nose.convertFile(songList);
+        int count=0;
+        while(count<nose.getSong().length){
+            System.out.println(songList.get(count));
+            count++;
+        }
 
     }
 
@@ -126,7 +134,9 @@ public class Final extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playArtistButton) {
             timeStamp = "playing";
-            model.addElement(songName(songs.getName()));
+            if(clipTimePosition==null){
+                model.addElement(songName(songs.getName()));
+            }
             clip.start();
             count++;
             clip.loop(Clip.LOOP_CONTINUOUSLY);

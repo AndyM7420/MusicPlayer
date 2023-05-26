@@ -7,8 +7,10 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton playButton;
     private JButton recommendButton;
     private JButton historyButton;
-    public MainFrame(){
+    public MainFrame() {
         this.setVisible(true);
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
