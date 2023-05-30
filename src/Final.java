@@ -45,7 +45,15 @@ public class Final extends JFrame implements ActionListener {
     public Final() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         restart.setSize(2, 3);
         JOptionPane.showMessageDialog(null, "Press listen to start song");
-        songs = new File("src/03 novacane.wav");
+        Song nose=new Song(new File("src/frank").listFiles());
+        nose.convertFile(songList);
+        int count=0;
+        while(count<nose.getSong().length) {
+            System.out.println(songList.get(count));
+            count++;
+        }
+        songs = new File(nose.chooseSong());
+        System.out.println(nose.chooseSong());
         audioInputStream = AudioSystem.getAudioInputStream(songs.getAbsoluteFile());
         ImageIcon restarts = new ImageIcon("src/2143261-200.png");
         ImageIcon pause = new ImageIcon("src/61180.png");
@@ -67,13 +75,7 @@ public class Final extends JFrame implements ActionListener {
         restart.addActionListener(this);
         recommendButton.addActionListener(this);
         listenButton.addActionListener(this);
-        Song nose=new Song(new File("src/frank").listFiles());
-        nose.convertFile(songList);
-        int count=0;
-        while(count<nose.getSong().length){
-            System.out.println(songList.get(count));
-            count++;
-        }
+
 
     }
 

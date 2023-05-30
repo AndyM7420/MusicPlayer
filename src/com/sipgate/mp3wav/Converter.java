@@ -77,7 +77,7 @@ public final class Converter {
     private void convert(InputStream input, OutputStream output, AudioFormat targetFormat) throws Exception {
 
         try (
-                final AudioInputStream rawSourceStream = AudioSystem.getAudioInputStream(input)
+                final AudioInputStream rawSourceStream = AudioSystem.getAudioInputStream(input);
         ) {
             final AudioFormat sourceFormat = rawSourceStream.getFormat();
             final AudioFormat convertFormat = getAudioFormat(sourceFormat);
