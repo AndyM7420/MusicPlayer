@@ -41,17 +41,16 @@ public class Final extends JFrame implements ActionListener {
     File songs;
     String timeStamp;
 
-
+// int count=0;
+//        while(count<nose.getSong().length) {
+//            System.out.println(songList.get(count));
+//            count++;
+//        }
     public Final() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         restart.setSize(2, 3);
         JOptionPane.showMessageDialog(null, "Press listen to start song");
         Song nose=new Song(new File("src/frank").listFiles());
         nose.convertFile(songList);
-        int count=0;
-        while(count<nose.getSong().length) {
-            System.out.println(songList.get(count));
-            count++;
-        }
         songs = new File(nose.chooseSong());
         System.out.println(nose.chooseSong());
         audioInputStream = AudioSystem.getAudioInputStream(songs.getAbsoluteFile());
@@ -136,13 +135,23 @@ public class Final extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playArtistButton) {
             timeStamp = "playing";
+            Song nose=new Song(new File("src/frank").listFiles());
+            nose.convertFile(songList);
             if(clipTimePosition==null){
                 model.addElement(songName(songs.getName()));
             }
-            clip.start();
-            count++;
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-            slider1.setVisible(true);
+            songs = new File(nose.chooseSong());
+            try {
+                audioInputStream = AudioSystem.getAudioInputStream(songs.getAbsoluteFile());
+                clip.start();
+                count++;
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                slider1.setVisible(true);
+            } catch (UnsupportedAudioFileException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (e.getSource() == restart) {
             try {
                 resume();

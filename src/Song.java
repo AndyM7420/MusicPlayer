@@ -1,4 +1,6 @@
 import com.sipgate.mp3wav.Converter;
+
+import javax.print.attribute.standard.PrinterMakeAndModel;
 import javax.sound.sampled.AudioFormat;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,20 +32,17 @@ public class Song {
             if (i.canRead()) {
                 Final.songList.add(i.getName());
 
-            } else {
-                System.out.println("File" + i.getName());
             }
         }
     }
 
     public String chooseSong() {
         System.out.println(Final.songList.toString());
-            int random = (int) (Math.random() * (Final.songList.size()));
-            if (Final.songList.get(random).contains(".mp3")) {
-                return "src/frank/"+Final.songList.get(random);
-            } else {
-                return "image";
-            }
+        int random = (int) (Math.random() * (Final.songList.size()));
+        while (!Final.songList.get(random).contains("wav")) {
+             random = (int) (Math.random() * (Final.songList.size()));
+        }
+                return "src/frank/" + Final.songList.get(random);
     }
     public String convertMP3ToWave(String chosenSong) throws IOException {
 //        Converter s=new Converter(new File("src/frank/02 strawberry swing.mp3").toURL().openStream());
