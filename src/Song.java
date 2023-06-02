@@ -1,4 +1,3 @@
-import com.sipgate.mp3wav.Converter;
 
 import javax.print.attribute.standard.PrinterMakeAndModel;
 import javax.sound.sampled.AudioFormat;
@@ -23,34 +22,26 @@ public class Song {
 
     File[] song;
 
-    public Song(File[] songList) {
+    public Song(File[] songList,ArrayList<String>songLists) {
+
         song = songList;
+        this.convertFile(songLists);
     }
 
     public void convertFile(ArrayList<String> songName) {
         for (File i : song) {
             if (i.canRead()) {
-                Final.songList.add(i.getName());
+                musicPlayer.songList.add(i.getName());
 
             }
         }
     }
 
     public String chooseSong() {
-        System.out.println(Final.songList.toString());
-        int random = (int) (Math.random() * (Final.songList.size()));
-        while (!Final.songList.get(random).contains("wav")) {
-             random = (int) (Math.random() * (Final.songList.size()));
+        int random = (int) (Math.random() * (musicPlayer.songList.size()));
+        while (!musicPlayer.songList.get(random).contains("wav")) {
+             random = (int) (Math.random() * (musicPlayer.songList.size()));
         }
-                return "src/frank/" + Final.songList.get(random);
-    }
-    public String convertMP3ToWave(String chosenSong) throws IOException {
-//        Converter s=new Converter(new File("src/frank/02 strawberry swing.mp3").toURL().openStream());
-//        s.convertFrom(new File("src/frank/02 strawberry swing.mp3").toURL().openStream());
-        Converter s=new Converter(new File("src/frank/02 strawberry swing.mp3").toURL().openStream());
-        OutputStream out = new FileOutputStream("src/frank/test.wav");
-        s.to(out);
-        return "";
-
+                return "src/frank/" + musicPlayer.songList.get(random);
     }
 }
