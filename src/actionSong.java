@@ -66,6 +66,7 @@ public class actionSong {
             clip.open(audioInputStream);
             firstAttempt = true;
         }
+
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
@@ -94,15 +95,25 @@ public class actionSong {
             JOptionPane.showMessageDialog(null, "HAVEN'T PLAYED SONG");
         }
     }
+    public void restart() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        clip.close();
+        clip.stop();
+        clip.setFramePosition(0);
+        play();
+    }
+
 
     public void random() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         if (!timeStamp.equals("random")) {
+            clip.close();
+            clip.stop();
             Song newSong = new Song(new File("src/frank").listFiles(), musicPlayer.songList);
             new actionSong(new File(newSong.chooseSong()));
             restartAudioStream(new File(newSong.chooseSong()));
             System.out.println(newSong.chooseSong());
             play();
             timeStamp="random";
+
         }else{
             clip.stop();
             Song newSong = new Song(new File("src/frank").listFiles(), musicPlayer.songList);
@@ -111,5 +122,9 @@ public class actionSong {
             System.out.println(newSong.chooseSong());
             play();
         }
+    }
+    public void forward() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        clip.setFramePosition(clip.getFramePosition()+20);
+        play();
     }
 }

@@ -39,6 +39,7 @@ public class musicPlayer extends JFrame implements ActionListener {
     private actionSong first;
     private Song nose;
     public musicPlayer() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+        slider1.setSize(5,5);
         restart.setSize(2, 3);
         JOptionPane.showMessageDialog(null, "Press listen to start song");
         nose=new Song(new File("src/frank").listFiles(),songList);
@@ -66,6 +67,7 @@ public class musicPlayer extends JFrame implements ActionListener {
         recommendButton.addActionListener(this);
         randomButton.addActionListener(this);
         pauseButton.addActionListener(this);
+        forwardButton.addActionListener(this);
 
 
     }
@@ -93,6 +95,9 @@ public class musicPlayer extends JFrame implements ActionListener {
             }
             try {
                 first.play();
+                ImageIcon changeImage = new ImageIcon("src/117815-200-removebg-preview.png");
+                changeImage.setImage(setImageButtons(changeImage));
+                pauseButton.setIcon(changeImage);
             } catch (UnsupportedAudioFileException ex) {
                 System.out.println("wrong file dude!");
                 throw new RuntimeException(ex);
@@ -101,14 +106,24 @@ public class musicPlayer extends JFrame implements ActionListener {
             } catch (LineUnavailableException ex) {
                 throw new RuntimeException(ex);
             }
+            slider1.setSize(5,5);
             slider1.setVisible(true);
         } else if (e.getSource() == restart) {
-
+            try {
+                first.restart();
+            } catch (UnsupportedAudioFileException ex) {
+                throw new RuntimeException(ex);
+            } catch (LineUnavailableException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (e.getSource() == recommendButton) {
 
         } else if (e.getSource() == randomButton) {
             try {
                 first.random();
+                model.addElement(songName(first.getSong().getName()));
             } catch (UnsupportedAudioFileException ex) {
                 throw new RuntimeException(ex);
             } catch (LineUnavailableException ex) {
@@ -118,6 +133,16 @@ public class musicPlayer extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == pauseButton) {
             first.pause();
+        }else if(e.getSource()==forwardButton){
+            try {
+                first.forward();
+            } catch (UnsupportedAudioFileException ex) {
+                throw new RuntimeException(ex);
+            } catch (LineUnavailableException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }
