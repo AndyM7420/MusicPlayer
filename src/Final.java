@@ -11,7 +11,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-public class Final extends JFrame implements ActionListener {
+public class musicPlayer extends JFrame implements ActionListener {
     private JPanel panel1;
     private JPanel panel2;
     private static Image backgroundImage;
@@ -46,7 +46,7 @@ public class Final extends JFrame implements ActionListener {
 //            System.out.println(songList.get(count));
 //            count++;
 //        }
-    public Final() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+    public musicPlayer() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         restart.setSize(2, 3);
         JOptionPane.showMessageDialog(null, "Press listen to start song");
         Song nose=new Song(new File("src/frank").listFiles());
@@ -81,7 +81,7 @@ public class Final extends JFrame implements ActionListener {
 
     public static void main(String[] args) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         JFrame frame = new JFrame("App");
-        frame.setContentPane(new Final().panel1);
+        frame.setContentPane(new musicPlayer().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.pack();
