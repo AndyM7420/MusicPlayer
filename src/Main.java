@@ -16,11 +16,11 @@ import java.nio.file.Paths;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, MalformedURLException, IOException, UnsupportedAudioFileException, LineUnavailableException {
-        JFrame frame = new JFrame("App");
+        JFrame frame = new JFrame("musicPlayer");
         frame.setContentPane(new musicPlayer().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setBackground(Color.BLUE);
+        frame.setBackground(Color.BLACK);
         frame.setVisible(true);
         frame.setSize(840, 690);
         frame.setLocationRelativeTo(null);

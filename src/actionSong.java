@@ -6,7 +6,6 @@ import java.io.IOException;
 public class actionSong {
     private Clip clip;
     private boolean firstAttempt;
-
     public Clip getClip() {
         return clip;
     }
@@ -107,7 +106,7 @@ public class actionSong {
         if (!timeStamp.equals("random")) {
             clip.close();
             clip.stop();
-            Song newSong = new Song(new File("src/frank").listFiles(), musicPlayer.songList);
+            Song newSong = new Song(new File("D:frank").listFiles(), musicPlayer.songList);
             new actionSong(new File(newSong.chooseSong()));
             restartAudioStream(new File(newSong.chooseSong()));
             System.out.println(newSong.chooseSong());
@@ -116,7 +115,7 @@ public class actionSong {
 
         }else{
             clip.stop();
-            Song newSong = new Song(new File("src/frank").listFiles(), musicPlayer.songList);
+            Song newSong = new Song(new File("D:frank").listFiles(), musicPlayer.songList);
             new actionSong(new File(newSong.chooseSong()));
             restartAudioStream(new File(newSong.chooseSong()));
             System.out.println(newSong.chooseSong());
@@ -126,5 +125,10 @@ public class actionSong {
     public void forward() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         clip.setFramePosition(clip.getFramePosition()+20);
         play();
+    }
+    public double getCurrentTime() {
+        int currentFrame = clip.getFramePosition();
+        double currentTime = (double) currentFrame / audioInputStream.getFormat().getFrameRate();
+        return currentTime;
     }
 }

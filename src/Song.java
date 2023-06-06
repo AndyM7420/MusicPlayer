@@ -20,7 +20,7 @@ public class Song {
     }
     public File eachSong;
 
-    File[] song;
+     File[] song;
 
     public Song(File[] songList,ArrayList<String>songLists) {
 
@@ -30,18 +30,20 @@ public class Song {
 
     public void convertFile(ArrayList<String> songName) {
         for (File i : song) {
-            if (i.canRead()) {
+            if (i.canExecute()&&musicPlayer.songList.size()!=song.length) {
                 musicPlayer.songList.add(i.getName());
-
             }
         }
+        System.out.println(musicPlayer.songList.toString());
     }
 
     public String chooseSong() {
         int random = (int) (Math.random() * (musicPlayer.songList.size()));
         while (!musicPlayer.songList.get(random).contains("wav")) {
              random = (int) (Math.random() * (musicPlayer.songList.size()));
+             System.out.println(musicPlayer.songList.get(random));
         }
-                return "src/frank/" + musicPlayer.songList.get(random);
+                return "D:frank\\"+musicPlayer.songList.get(random);
+
     }
 }
