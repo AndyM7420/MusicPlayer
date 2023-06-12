@@ -2,7 +2,6 @@
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
@@ -13,15 +12,15 @@ public class GeniusAPIConfigure {
     private String searchSong;
 
 
-    public Split getMetadata() {
+    public SongInfo getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(Split metadata) {
+    public void setMetadata(SongInfo metadata) {
         this.metadata = metadata;
     }
 
-    private Split metadata;
+    private SongInfo metadata;
 
     public String getRapidAPIKey() {
         return rapidAPIKey;
@@ -65,7 +64,7 @@ public class GeniusAPIConfigure {
     }
     public void request() throws IOException, InterruptedException {
         response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        metadata=new Split(response);
+        metadata=new SongInfo(response);
     }
     public String fillSpace(String songWithSpace){
 

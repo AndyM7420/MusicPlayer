@@ -2,7 +2,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.http.HttpResponse;
 
-public class Split {
+public class SongInfo {
     String albumReleaseDate;
     String artist_names;
     String songTitle;
@@ -34,27 +34,23 @@ public class Split {
 
 
 
-    URL songPic;
-    URL artistPic;
-    String[] split;
+    private URL songPic;
+    private URL artistPic;
+    private String[] songInfoKeys;
 
-    public Split(HttpResponse bodies) throws MalformedURLException {
-        split = bodies.body().toString().split(",");
-        for (String s : split) {
-            System.out.println(s);
-        }
-
-        for (int i = 0; i < split.length; i++) {
-             if (split[i].contains("artist_names")) {
-                artist_names = split[i].substring(split[i].indexOf(":\"") + 2, split[i].length() - 1);
-            } else if (split[i].contains("\"id\"")) {
-                id = Integer.parseInt(split[i].substring(split[i].indexOf(":") + 1));
-            } else if (split[i].contains("\"header_image_thumbnail_url\"") && i == 8) {
-                artistPic = new URL(ridOfSlashURl(split[i].substring(split[i].indexOf(":") + 2, split[i].length() - 1)));
-            } else if (split[i].contains("release_date_for_display")) {
-                albumReleaseDate = split[i].substring(split[i].indexOf(":") + 2) + split[i + 1].substring(0, split[i + 1].length() - 1);
-            } else if (split[i].contains("song_art_image_thumbnail_url")) {
-                songPic = new URL(ridOfSlashURl(split[i].substring(split[i].indexOf(":") + 2, split[i].length() - 1)));
+    public SongInfo(HttpResponse bodies) throws MalformedURLException {
+        songInfoKeys = bodies.body().toString().split(",");
+        for (int i = 0; i < songInfoKeys.length; i++) {
+             if (songInfoKeys[i].contains("artist_names")) {
+                artist_names = songInfoKeys[i].substring(songInfoKeys[i].indexOf(":\"") + 2, songInfoKeys[i].length() - 1);
+            } else if (songInfoKeys[i].contains("\"id\"")) {
+                id = Integer.parseInt(songInfoKeys[i].substring(songInfoKeys[i].indexOf(":") + 1));
+            } else if (songInfoKeys[i].contains("\"header_image_thumbnail_url\"") && i == 8) {
+                artistPic = new URL(ridOfSlashURl(songInfoKeys[i].substring(songInfoKeys[i].indexOf(":") + 2, songInfoKeys[i].length() - 1)));
+            } else if (songInfoKeys[i].contains("release_date_for_display")) {
+                albumReleaseDate = songInfoKeys[i].substring(songInfoKeys[i].indexOf(":") + 2) + songInfoKeys[i + 1].substring(0, songInfoKeys[i + 1].length() - 1);
+            } else if (songInfoKeys[i].contains("song_art_image_thumbnail_url")) {
+                songPic = new URL(ridOfSlashURl(songInfoKeys[i].substring(songInfoKeys[i].indexOf(":") + 2, songInfoKeys[i].length() - 1)));
             }
         }
         System.out.println(albumReleaseDate);
@@ -98,12 +94,12 @@ public class Split {
         this.songTitle = songTitle;
     }
 
-    public String[] getSplit() {
-        return split;
+    public String[] getSongInfoKeys() {
+        return songInfoKeys;
     }
 
-    public void setSplit(String[] split) {
-        this.split = split;
+    public void setSongInfoKeys(String[] songInfoKeys) {
+        this.songInfoKeys = songInfoKeys;
     }
 }
 

@@ -8,16 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, MalformedURLException, IOException, UnsupportedAudioFileException, LineUnavailableException {
-        JFrame frame = new JFrame("musicPlayer");
-        frame.setContentPane(new musicPlayer().panel1);
+        JFrame frame = new JFrame("MusicPlayer");
+        frame.setContentPane(new MusicPlayer().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setBackground(Color.BLACK);

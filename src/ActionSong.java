@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
-public class actionSong {
+public class ActionSong {
     private Clip clip;
     private boolean firstAttempt;
     public Clip getClip() {
@@ -53,7 +53,7 @@ public class actionSong {
     private File song;
     private String timeStamp = "";
 
-    public actionSong(File song) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    public ActionSong(File song) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         this.song = song;
         audioInputStream = AudioSystem.getAudioInputStream(song.getAbsoluteFile());
         clip = AudioSystem.getClip();
@@ -113,8 +113,8 @@ public class actionSong {
         if (!timeStamp.equals("random")) {
             clip.close();
             clip.stop();
-            Song newSong = new Song(new File("D:frank").listFiles(), musicPlayer.songList);
-            new actionSong(new File(newSong.chooseSong()));
+            Song newSong = new Song(new File("D:frank").listFiles(), MusicPlayer.songList);
+            new ActionSong(new File(newSong.chooseSong()));
             restartAudioStream(new File(newSong.chooseSong()));
             play();
             System.out.println(getSong().getName());
@@ -123,8 +123,8 @@ public class actionSong {
 
         }else{
             clip.stop();
-            Song newSong = new Song(new File("D:frank").listFiles(), musicPlayer.songList);
-            new actionSong(new File(newSong.chooseSong()));
+            Song newSong = new Song(new File("D:frank").listFiles(), MusicPlayer.songList);
+            new ActionSong(new File(newSong.chooseSong()));
             restartAudioStream(new File(newSong.chooseSong()));
             play();
             System.out.println(getSong().getName());

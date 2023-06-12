@@ -1,14 +1,6 @@
 
-import javax.print.attribute.standard.PrinterMakeAndModel;
-import javax.sound.sampled.AudioFormat;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 
 public class Song {
     private String randomSong;
@@ -32,20 +24,19 @@ public class Song {
 
     public void convertFile(ArrayList<String> songName) {
         for (File i : song) {
-            if (i.canExecute()&&musicPlayer.songList.size()!=song.length) {
-                musicPlayer.songList.add(i.getName());
+            if (i.canExecute()&& MusicPlayer.songList.size()!=song.length) {
+                MusicPlayer.songList.add(i.getName());
             }
         }
-        System.out.println(musicPlayer.songList.toString());
     }
 
     public String chooseSong() {
-        int random = (int) (Math.random() * (musicPlayer.songList.size()));
-        while (!musicPlayer.songList.get(random).contains("wav")) {
-            random=(int) (Math.random() * (musicPlayer.songList.size()));
-            System.out.println(musicPlayer.songList.get(random));
+        int random = (int) (Math.random() * (MusicPlayer.songList.size()));
+        while (!MusicPlayer.songList.get(random).contains("wav")) {
+            random=(int) (Math.random() * (MusicPlayer.songList.size()));
+            System.out.println(MusicPlayer.songList.get(random));
         }
-        randomSong=musicPlayer.songList.get(random);
-        return "D:frank\\"+musicPlayer.songList.get(random);
+        randomSong= MusicPlayer.songList.get(random);
+        return "D:frank\\"+ MusicPlayer.songList.get(random);
     }
 }

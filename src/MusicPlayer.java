@@ -8,27 +8,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static java.awt.Font.BOLD;
-
-public class musicPlayer extends JFrame implements ActionListener, HierarchyListener, MouseListener, KeyListener {
+public class MusicPlayer extends JFrame implements ActionListener, HierarchyListener, MouseListener, KeyListener {
     public JPanel panel1;
     private JPanel panel2;
-    private static Image backgroundImage;
     private boolean sliderSong;
     private Timer timeOfSong;
-    private Long clipTimePosition;
-    private int duration;
-    private Clip clip;
-    private int count;
     private JPanel buttonPanel;
-    private AudioInputStream audioInputStream;
-    private DataLine own;
     private JButton randomButton;
-    private JButton recommendButton;
-    private JButton Resume;
-    private JList<String> list1;
-
-    private   JSlider slider1;
+    private JButton resume;
+    private JList<String> listPlayedSongs;
+    private   JSlider songSlider;
     private JButton pauseButton;
     private JButton forwardButton;
     private JButton restart;
@@ -39,51 +28,45 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
     private JButton coverAlbumButton;
     private JLabel picLabel;
     public static ArrayList<String> songList=new ArrayList<String>();
-    DefaultListModel<String> model = new DefaultListModel<>();
-    DefaultListModel<String> defaultListModel = new DefaultListModel<>();
+    DefaultListModel<String> transferredSongs = new DefaultListModel<>();
+    DefaultListModel<String> songListToSearch = new DefaultListModel<>();
+    private JLabel label3 = new JLabel();
+    private JPanel panel = new JPanel();
+    File song;
+    private ActionSong songPlayer;
 
-
-    JLabel label3 = new JLabel();
-    JPanel panel = new JPanel();
-    JSplitPane splitPane = new JSplitPane();
-    File songs;
-    private actionSong first;
-
-    private Song nose;
-    public musicPlayer() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        restart.setSize(2, 3);
-        JOptionPane.showMessageDialog(null, "Click the search box to search Catalog.\nClick Random to get recent songs");
-        nose = new Song(new File("D:frank").listFiles(), songList);
-        nose.convertFile(songList);
-        songs = new File(nose.chooseSong());
+    private Song songLibrary;
+    public MusicPlayer() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+        JOptionPane.showMessageDialog(null, "Click the search box to search Catalog.\nClick Random to get random songs");
+        songLibrary = new Song(new File("D:frank").listFiles(), songList);
+        songLibrary.convertFile(songList);
+        song = new File(songLibrary.chooseSong());
         Title.setSize(20, 30);
-        audioInputStream = AudioSystem.getAudioInputStream(songs.getAbsoluteFile());
         ImageIcon restarts = new ImageIcon("src/download.png");
         ImageIcon pause = new ImageIcon("src/61180.png");
         ImageIcon forward = new ImageIcon("src/images.png");
-        restarts.setImage(setImageButtons(restarts));
-        pause.setImage(setImageButtons(pause));
-        forward.setImage(setImageButtons(forward));
+        restarts.setImage(scaleImage(restarts));
+        pause.setImage(scaleImage(pause));
+        forward.setImage(scaleImage(forward));
         pauseButton.setIcon(pause);
         forwardButton.setIcon(forward);
         restart.setIcon((restarts));
         if (!sliderSong) {
-            slider1.setVisible(false);
+            songSlider.setVisible(false);
         }
-        list1.setModel(model);
-        list1.setOpaque(true);
-        first = new actionSong(songs);
-        slider1.setFont(new Font("MV Boli", BOLD, 10));
-        slider1.setPaintTicks(true);
-        slider1.setPaintTrack(true);
-        slider1.setPaintLabels(true);
-        slider1.setMaximum(first.getSongDurationInMinute());
-        Resume.addActionListener(this);
+        listPlayedSongs.setModel(transferredSongs);
+        listPlayedSongs.setOpaque(true);
+        songPlayer = new ActionSong(song);
+        songSlider.setPaintTicks(true);
+        songSlider.setPaintTrack(true);
+        songSlider.setPaintLabels(true);
+        songSlider.setMaximum(songPlayer.getSongDurationInMinute());
+        resume.addActionListener(this);
         restart.addActionListener(this);
         randomButton.addActionListener(this);
         pauseButton.addActionListener(this);
         forwardButton.addActionListener(this);
-        panel.add(slider1);
+        panel.add(songSlider);
         list2.addHierarchyListener(this);
        list2.addMouseListener(this);
        textField1.addMouseListener(this);
@@ -96,11 +79,11 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
         }
         if(e.getSource()==list2){
             try {
-                first.setSong(new File("D:frank\\"+list2.getSelectedValue()));
-                first.stop();
-                first.play();
-                model.addElement(songName(list2.getSelectedValue()));
-                GeniusAPIConfigure songData=new GeniusAPIConfigure(onlySongName(list2.getSelectedValue()));
+                songPlayer.setSong(new File("D:frank\\"+list2.getSelectedValue()));
+                songPlayer.stop();
+                songPlayer.play();
+                transferredSongs.addElement(songName(list2.getSelectedValue()));
+                GeniusAPIConfigure songData=new GeniusAPIConfigure(SongNameForAPI(list2.getSelectedValue()));
                 BufferedImage albumCover= ImageIO.read(songData.getMetadata().getSongPic());
                 coverAlbumButton.setIcon(new ImageIcon(albumCover));
                System.out.println(songData.getMetadata().getSongTitle());
@@ -113,7 +96,7 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
-            JOptionPane.showMessageDialog(rootPane,list2.getSelectedValue()+"\nDuration:"+first.getSongDuration(),"Selected Song:",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane,list2.getSelectedValue()+"\nDuration:"+ songPlayer.getSongDuration(),"Selected Song:",JOptionPane.INFORMATION_MESSAGE);
     }}
 
     @Override
@@ -135,13 +118,12 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
     public void mouseExited(MouseEvent e) {
 
     }
-
     public void moveSlider(){
-        slider1.setValue((int) first.getClipTimePosition());
+        songSlider.setValue((int) songPlayer.getClipTimePosition());
         timeOfSong=new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource()==slider1){
+                if(e.getSource()== songSlider){
                 }
             }
         });
@@ -149,13 +131,13 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
     }
     public void bindData(){
         String songName = "";
-        for (String s : songList) {
-            if (s.contains("wav")) {
-                defaultListModel.addElement(s);
+        for (String song : songList) {
+            if (song.contains("wav")) {
+                songListToSearch.addElement(song);
 
             }
         }
-        list2.setModel(defaultListModel);
+        list2.setModel(songListToSearch);
         list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
     private void searchFilter(String searchTerm){
@@ -167,11 +149,11 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
                 filteredSongs.addElement(songList.get(i));
             }
         }
-        defaultListModel=filteredSongs;
-        list2.setModel(defaultListModel);
+        songListToSearch =filteredSongs;
+        list2.setModel(songListToSearch);
     }
 
-    public String onlySongName(String songName){
+    public String SongNameForAPI(String songName){
         if(songName.contains(" - ")){
             songName=songName.substring(songName.indexOf("- ")+2,songName.indexOf(".wav"));
         }
@@ -184,7 +166,7 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
         return songName;
     }
 
-    public Image setImageButtons(ImageIcon icons) {
+    public Image scaleImage(ImageIcon icons) {
         Image image = icons.getImage();
         return image.getScaledInstance(45, 45, Image.SCALE_FAST);
     }
@@ -192,12 +174,12 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == Resume) {
-            if (Objects.equals(first.getTimeStamp(), "")) {
-                model.addElement(songName(first.getSong().getName()));
+        if (e.getSource() == resume) {
+            if (Objects.equals(songPlayer.getTimeStamp(), "")) {
+                transferredSongs.addElement(songName(songPlayer.getSong().getName()));
             }
             try {
-                first.play();
+                songPlayer.play();
             } catch (UnsupportedAudioFileException ex) {
                 System.out.println("wrong file dude!");
                 throw new RuntimeException(ex);
@@ -205,20 +187,20 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
                 throw new RuntimeException(ex);
             }
 
-            slider1.setVisible(true);
+            songSlider.setVisible(true);
         } else if (e.getSource() == restart) {
-                first.decreaseBy10();
+                songPlayer.decreaseBy10();
         } else if (e.getSource() == randomButton) {
             try {
-                first.random();
-                model.addElement(songName(first.getSong().getName()));
+                songPlayer.random();
+                transferredSongs.addElement(songName(songPlayer.getSong().getName()));
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                 throw new RuntimeException(ex);
             }
         } else if (e.getSource() == pauseButton) {
-            first.pause();
+            songPlayer.pause();
         } else if (e.getSource() == forwardButton) {
-            first.increaseBy10();
+            songPlayer.increaseBy10();
 
         }
     }
@@ -233,24 +215,16 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
     public String toString() {
         return super.toString();
     }
-    public JSlider getSlider1() {
-        return slider1;
+    public JSlider getSongSlider() {
+        return songSlider;
     }
-    public int getDesiredFrame(){
-        int progress = slider1.getValue();
-        double frame = ((double) first.getAudioInputStream().getFrameLength() * ((double) progress / 100.0));
-        return (int) frame;
-    }
+
     public void changePause(){
         ImageIcon changeImage = new ImageIcon("src/117815-200-removebg-preview.png");
-        changeImage.setImage(setImageButtons(changeImage));
+        changeImage.setImage(scaleImage(changeImage));
         pauseButton.setIcon(changeImage);
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getSource()==textField1){
@@ -258,12 +232,15 @@ public class musicPlayer extends JFrame implements ActionListener, HierarchyList
         }
 
     }
-
-
     @Override
     public void hierarchyChanged(HierarchyEvent e) {
 
     }
     public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
     }
 }
