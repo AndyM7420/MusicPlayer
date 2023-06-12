@@ -35,6 +35,7 @@ public class actionSong {
     }
 
     public void setSong(File song) {
+        firstAttempt=false;
         this.song = song;
     }
 
@@ -47,6 +48,7 @@ public class actionSong {
     }
 
     private AudioInputStream audioInputStream;
+    private AudioFormat format;
     private long clipTimePosition;
     private File song;
     private String timeStamp = "";
@@ -74,6 +76,11 @@ public class actionSong {
             clipTimePosition = clip.getMicrosecondPosition();
             clip.stop();
             timeStamp = "paused";
+        }
+    }
+    public void stop(){
+        if(!firstAttempt){
+            clip.close();
         }
     }
 
@@ -109,26 +116,50 @@ public class actionSong {
             Song newSong = new Song(new File("D:frank").listFiles(), musicPlayer.songList);
             new actionSong(new File(newSong.chooseSong()));
             restartAudioStream(new File(newSong.chooseSong()));
-            System.out.println(newSong.chooseSong());
             play();
+            System.out.println(getSong().getName());
             timeStamp="random";
+
 
         }else{
             clip.stop();
             Song newSong = new Song(new File("D:frank").listFiles(), musicPlayer.songList);
             new actionSong(new File(newSong.chooseSong()));
             restartAudioStream(new File(newSong.chooseSong()));
-            System.out.println(newSong.chooseSong());
             play();
+            System.out.println(getSong().getName());
         }
-    }
-    public void forward() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
-        clip.setFramePosition(clip.getFramePosition()+20);
-        play();
+
     }
     public double getCurrentTime() {
         int currentFrame = clip.getFramePosition();
         double currentTime = (double) currentFrame / audioInputStream.getFormat().getFrameRate();
         return currentTime;
     }
+    public double getSongDuration(){
+        format=audioInputStream.getFormat();
+        long frames=audioInputStream.getFrameLength();
+        double duration = (frames + 0.0) / format.getFrameRate();
+        return duration;
+    }
+    public int getSongDurationInMinute(){
+        format=audioInputStream.getFormat();
+        int frameSize=format.getFrameSize();
+        long audioFileLength=song.length();
+        float frameRate = format.getFrameRate();
+        float durationInMin= ((audioFileLength / (frameSize * frameRate)/60));
+        return ((int)Math.round(0.00+durationInMin));
+    }
+    public void increaseBy10(){
+        System.out.println(clip.getFramePosition());
+        System.out.println(clip.getFrameLength());
+        clip.setFramePosition(clip.getFramePosition()+(clip.getFrameLength()/100));
+        System.out.println(clip.getFramePosition());
+    }
+    public void decreaseBy10(){
+        if(clip.getFramePosition()-(clip.getFrameLength()/100)>0) {
+            clip.setFramePosition(clip.getFramePosition() - (clip.getFrameLength() / 100));
+        }
+    }
+
 }

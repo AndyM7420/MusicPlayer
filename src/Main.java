@@ -23,6 +23,7 @@ public class Main {
         frame.setBackground(Color.BLACK);
         frame.setVisible(true);
         frame.setSize(840, 690);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
     }
 }
